@@ -7,7 +7,16 @@ let routerItems = express.Router()
 
 routerItems.get( '/', async (req, res) => {
     database.connect();
-    let items = await database.query('SELECT * FROM items')
+    let items = []
+    if ( req.query.p != undefined && !isNaN(req.query.p) ){
+        let page = parseInt( req.query.p )
+        let elementsperpage = 2
+        page = ( page - 1 ) * elementsperpage
+        items = await database.query('SELECT * FROM items OFFSET ? ROWS FETCH NEXT ? ROWS ONLY', [page, elementsperpage])
+    } else {
+        items = await database.query('SELECT * FROM items')
+    }
+
     database.disconnect()
     res.send( items )
 

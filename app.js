@@ -6,6 +6,8 @@ const database = require('./database')
 const app = express()
 const port = 3000
 
+app.use(express.json())
+
 const routerItems = require('./routers/routerItems')
 app.use('/items', routerItems)
 
