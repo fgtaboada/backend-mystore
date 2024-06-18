@@ -9,6 +9,8 @@ const port = 3000
 const routerItems = require('./routers/routerItems')
 app.use('/items', routerItems)
 
+const routerOrders = require('./routers/routerOrders')
+app.use('/orders', routerOrders)
 
 app.listen( port, () => {
     console.log( 'App listening on port ' + port )
