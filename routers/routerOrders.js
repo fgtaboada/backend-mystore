@@ -73,4 +73,55 @@ routerOrders.post( '/:idOrder/', async (req,res) => {
     res.json({ inserted : true })
 })
 
+routerOrders.put( '/:idOrder/items/:idItem', async (req,res) => {
+    // update number of units
+    // http://localhost:3000/orders/4/items/5
+    let idOrder = req.params.idOrder
+    if ( idOrder == undefined){
+        res.status(400).json({error:"no idOrder in params"})
+    }
+    idOrder = parseInt(idOrder)
+    
+    let idItem = req.params.idItem
+    if (idItem == undefined) {
+        res.status(400).json({ error: "no idItem in params" })
+    }
+    idItem = parseInt(idItem)
+
+    let units = req.body.units
+    if (units == undefined) {
+        res.status(400).json({ error: "no units in body" })
+    }
+    units = parseInt( units )
+
+    database.connect();
+    await database.query( 'UPDATE orders_items SET units = ? WHERE idOrder = ? AND idItem = ?', 
+        [units,idOrder,idItem] )
+    database.disconnect();
+    res.json({ modified : true})
+})
+
+
+routerOrders.put( '/:id', async (req,res) => {
+    // modify status
+    let idOrder = req.params.id
+    if (idOrder == undefined) {
+        return res.status(400).json({ error: 'no idOrder' })
+    }
+    idOrder = parseInt(idOrder)
+
+    let status = req.body.status
+    if (status == undefined) {
+        return res.status(400).json({ error: 'no status in body' })
+    }
+    status = parseInt( status )
+
+    database.connect();
+    // let updatedStatus = 
+    await database.query( 'UPDATE orders SET status = ? WHERE id = ?', 
+        [status, idOrder] )
+    database.disconnect();
+    res.json({ updatedStatus : true })
+})
+
 module.exports = routerOrders
