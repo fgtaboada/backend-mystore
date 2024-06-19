@@ -30,6 +30,13 @@ routerClients.delete( '/:DNI', async (req, res) => {
 
     database.connect();
     try{
+        let clientOrders = await database.query( 'SELECT id FROM orders WHERE DNIClient = ?', [DNIClient] )
+        if (clientOrders.length > 0){
+            // simplify to retain just order ids
+            clientOrders = clientOrders.map( order => order.id )
+            await database.query('DELETE FROM orders_items WHERE idOrder IN (?)', [clientOrders])
+            await database.query('DELETE FROM orders WHERE DNIClient = ?', [DNIClient])
+        }
         await database.query( 'DELETE FROM clients WHERE DNI = ?', [DNIClient] )
     } catch(error) {
         // return res.status(400).json({error:error})
