@@ -133,6 +133,7 @@ routerOrders.delete('/:id', async (req, res) => {
 
     database.connect();
     try {
+        await database.query('DELETE FROM orders_items WHERE idOrder = ?', [idOrder])
         await database.query('DELETE FROM orders WHERE id = ?', [idOrder])
     } catch (error) {
         // return res.status(400).json({error:error})
