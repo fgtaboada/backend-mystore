@@ -14,6 +14,9 @@ app.use('/items', routerItems)
 const routerOrders = require('./routers/routerOrders')
 app.use('/orders', routerOrders)
 
+const routerClients = require('./routers/routerClients')
+app.use('/clients', routerClients)
+
 app.listen( port, () => {
     console.log( 'App listening on port ' + port )
 })

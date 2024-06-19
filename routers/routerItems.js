@@ -19,7 +19,6 @@ routerItems.get( '/', async (req, res) => {
 
     database.disconnect()
     res.send( items )
-
 })
 
 routerItems.get('/:id', async (req, res) => {

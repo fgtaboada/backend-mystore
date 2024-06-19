@@ -124,4 +124,22 @@ routerOrders.put( '/:id', async (req,res) => {
     res.json({ updatedStatus : true })
 })
 
+
+routerOrders.delete('/:id', async (req, res) => {
+    let idOrder = req.params.id
+    if (idOrder == undefined) {
+        return res.status(400).json({ error: 'no idOrder in params' })
+    }
+
+    database.connect();
+    try {
+        await database.query('DELETE FROM orders WHERE id = ?', [idOrder])
+    } catch (error) {
+        // return res.status(400).json({error:error})
+        return res.status(400).json({ error: 'Unable to DELETE order with active/previous orders' })
+    }
+    database.disconnect()
+    res.json({ delete: true })
+})
+
 module.exports = routerOrders
