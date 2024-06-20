@@ -29,6 +29,23 @@ routerOrders.get('/:id', async (req, res) => {
     res.json(orders)
 })
 
+
+routerOrders.get('/:id/items', async (req, res) => {
+    if ( req.params.id == undefined ){
+        return res.status(400).json( { error : 'no id param' } )
+    }
+    
+    
+    database.connect();
+    
+    let ordersItems = await database.query(
+        'SELECT * FROM orders_items \
+            JOIN items ON orders_items.idItem = items.id \
+            WHERE orders_items.idOrder = ?', [req.params.id] )
+    database.disconnect()
+    res.json(ordersItems)
+})
+
 routerOrders.post( '/', async (req, res) => {
     let DNIClient = req.body.DNIClient
 
